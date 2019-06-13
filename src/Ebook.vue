@@ -1,52 +1,65 @@
 <template>
   <div class="ebook">
-    <div class="title-wrapper">
-      <div class="left">
-        <span class="icon-back icon"></span>
+    <transition name="slide-down">
+      <div class="title-wrapper" v-show="ifTitleAndMenuShow">
+        <div class="left">
+          <span class="icon-back icon"></span>
+        </div>
+        <div class="right">
+          <div class="icon-wrapper">
+            <span class="icon-cart icon"></span>
+          </div>
+          <div class="icon-wrapper">
+            <span class="icon-person icon"></span>
+          </div>
+          <div class="icon-wrapper">
+            <span class="icon-more icon"></span>
+          </div>
+        </div>
       </div>
-      <div class="right">
-        <div class="icon-wrapper">
-          <span class="icon-cart icon"></span>
-        </div>
-        <div class="icon-wrapper">
-          <span class="icon-person icon"></span>
-        </div>
-        <div class="icon-wrapper">
-          <span class="icon-more icon"></span>
-        </div>
-      </div>
-    </div>
+    </transition>
     <div class="read-wrapper">
       <div id="read"></div>
       <div class="mask">
         <div class="left" @click="prevPage"></div>
-        <div class="center"></div>
+        <div class="center" @click="toggelTitleMenuShow"></div>
         <div class="right" @click="nextPage"></div>
       </div>
     </div>
     <!-- 菜单栏 -->
-    <div class="menu-wrapper">
-      <div class="icon-wrapper">
-        <span class="icon-menu icon"></span>
+    <transition name="slide-up">
+      <div class="menu-wrapper" v-show="ifTitleAndMenuShow">
+        <div class="icon-wrapper">
+          <span class="icon-menu icon"></span>
+        </div>
+        <div class="icon-wrapper">
+          <span class="icon-progress icon"></span>
+        </div>
+        <div class="icon-wrapper">
+          <span class="icon-bright icon"></span>
+        </div>
+        <div class="icon-wrapper">
+          <span class="icon-share icon"></span>
+        </div>
       </div>
-      <div class="icon-wrapper">
-        <span class="icon-progress icon"></span>
-      </div>
-      <div class="icon-wrapper">
-        <span class="icon-bright icon"></span>
-      </div>
-      <div class="icon-wrapper">
-        <span class="icon-share icon"></span>
-      </div>
-    </div>
+    </transition>
   </div>
 </template>
 
 <script>
 import Epub from 'epubjs'
 const DOWNLOAD_URL = '/static/2018_Book_AgileProcessesInSoftwareEngine.epub'
+
 export default {
+  data() {
+    return {
+      ifTitleAndMenuShow: false
+    }
+  },
   methods: {
+    toggelTitleMenuShow() {
+      this.ifTitleAndMenuShow = !this.ifTitleAndMenuShow
+    },
     // 电子书的解析和渲染
     showEpub() {
       // 生成 Book

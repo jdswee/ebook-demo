@@ -9,7 +9,12 @@
         <div class="right" @click="nextPage"></div>
       </div>
     </div>
-    <menu-bar :ifTitleAndMenuShow="ifTitleAndMenuShow" ref="menuBar"></menu-bar>
+    <menu-bar
+    :ifTitleAndMenuShow="ifTitleAndMenuShow"
+    :fontSizeList="fontSizeList"
+    :defaultFontSize="defaultFontSize"
+    @setFontSize="setFontSize"
+    ref="menuBar"></menu-bar>
   </div>
 </template>
 
@@ -26,7 +31,17 @@ export default {
   },
   data() {
     return {
-      ifTitleAndMenuShow: false
+      ifTitleAndMenuShow: false,
+      fontSizeList: [
+        {fontSize: 12},
+        {fontSize: 14},
+        {fontSize: 16},
+        {fontSize: 18},
+        {fontSize: 20},
+        {fontSize: 22},
+        {fontSize: 24}
+      ],
+      defaultFontSize: 16
     }
   },
   methods: {
@@ -47,6 +62,8 @@ export default {
       })
       // 通过 Rendition.display 渲染电子书
       this.rendition.display()
+      this.themes = this.rendition.themes
+      this.setFontSize(this.defaultFontSize)
     },
     prevPage() {
       if(this.rendition) {
@@ -56,6 +73,12 @@ export default {
     nextPage() {
       if(this.rendition) {
         this.rendition.next()
+      }
+    },
+    setFontSize(fontSize) {
+      this.defaultFontSize = fontSize
+      if(this.themes) {
+        this.themes.fontSize(fontSize + 'px')
       }
     }
   },

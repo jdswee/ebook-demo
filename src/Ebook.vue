@@ -14,6 +14,9 @@
     :fontSizeList="fontSizeList"
     :defaultFontSize="defaultFontSize"
     @setFontSize="setFontSize"
+    :themeList="themeList"
+    :defaultTheme="defaultTheme"
+    @setTheme="setTheme"
     ref="menuBar"></menu-bar>
   </div>
 </template>
@@ -41,10 +44,46 @@ export default {
         {fontSize: 22},
         {fontSize: 24}
       ],
-      defaultFontSize: 16
+      defaultFontSize: 16,
+      themeList: [
+        {
+          name: 'default',
+          style: {
+            body: {'color': '#000', 'background': '#fff'}
+          }
+        },
+        {
+          name: 'eye',
+          style: {
+            body: {'color': '#000', 'background': '#ceeaba'}
+          }
+        },
+        {
+          name: 'night',
+          style: {
+            body: {'color': '#fff', 'background': '#000'}
+          }
+        },
+        {
+          name: 'gold',
+          style: {
+            body: {'color': '#000', 'background': 'rgb(241, 236, 226)'}
+          }
+        }
+      ],
+      defaultTheme: 0
     }
   },
   methods: {
+    setTheme(index) {
+      this.themes.select(this.themeList[index].name)
+      this.defaultTheme = index
+    },
+    registerTheme() {
+      this.themeList.forEach(theme => {
+        this.themes.register(theme.name, theme.style)
+      })
+    },
     toggelTitleMenuShow() {
       this.ifTitleAndMenuShow = !this.ifTitleAndMenuShow
       if(!this.ifTitleAndMenuShow) {
@@ -62,8 +101,12 @@ export default {
       })
       // 通过 Rendition.display 渲染电子书
       this.rendition.display()
+      // 获取Theme对象
       this.themes = this.rendition.themes
+      // 设置默认字体
       this.setFontSize(this.defaultFontSize)
+      this.registerTheme()
+      this.setTheme(this.defaultTheme)
     },
     prevPage() {
       if(this.rendition) {

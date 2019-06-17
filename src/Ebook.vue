@@ -75,6 +75,11 @@ export default {
     }
   },
   methods: {
+    onProgressChange(progress) {
+      const percentage = progress / 100
+      const location = percentage > 0 ? this.locations.cfiFromPercentage(percentage) : 0
+      this.rendition.display(location)
+    },
     setTheme(index) {
       this.themes.select(this.themeList[index].name)
       this.defaultTheme = index
@@ -107,6 +112,12 @@ export default {
       this.setFontSize(this.defaultFontSize)
       this.registerTheme()
       this.setTheme(this.defaultTheme)
+      //获取location对象,通过epubjs的钩子函数来实现
+      this.book.ready.then(() => {
+        return this.book.locations.generate()
+      }).then(result => {
+        this.locations = this.book.locations
+      })
     },
     prevPage() {
       if(this.rendition) {
